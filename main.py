@@ -20,7 +20,11 @@ def readWechatID(filePath):
             lines.append(line)
     return lines
 
-
+def checkuserstatus(wechatid):
+    if d.xpath('//*[@resource-id="com.tencent.mm:id/j5_"]/android.widget.ImageView[1]').exists:
+        print(wechatid, "该用户不存在")
+        d(resourceId="com.tencent.mm:id/apy").click()
+        return
 def addFriends(wechatid):
     doneidlist = readWechatID(done_path)
     if wechatid in doneidlist:
@@ -31,23 +35,19 @@ def addFriends(wechatid):
     time.sleep(1)
     # 输入要添加的号码
     d.xpath('//*[@resource-id="com.tencent.mm:id/eg6"]').set_text(wechatid)
-    # d.set_fastinput_ime(True)
-    # d.send_keys(wechatid, clear=True)
-    # d.set_fastinput_ime(False)
     # #输入完毕点击下方出现的搜索:xxxxxxxxxxxx
     d.xpath('//*[@resource-id="com.tencent.mm:id/j6x"]/android.widget.RelativeLayout[1]').click()
     # 判断用户状态
-    if d.xpath('//*[@resource-id="com.tencent.mm:id/bmj"]/android.widget.FrameLayout[1]').exists:
-        print(wechatid, "该用户不存在")
-        d(resourceId="com.tencent.mm:id/apy").click()
+    # 等待虚拟页面加载完毕
+    time.sleep(6)
+    if not d(text='添加到通讯录').exists:
+        print("该用户bu存在")
         return
-    time.sleep(1)
     # #点击接下来要进行的操作按钮 这里是点击添加到通讯录
     d(resourceId="com.tencent.mm:id/khj").click()
     # 设置好友申请内容
     d(resourceId="com.tencent.mm:id/j0w").set_text(verifyContent)
-    time.sleep(1)
-    d.click(0.911, 0.672)
+    time.sleep(2)
     # 点击发送
     d(resourceId="com.tencent.mm:id/e9q").click()
     # 点击返回到添加好友页面
