@@ -2,7 +2,7 @@
 import time
 import uiautomator2 as u2
 
-d = u2.connect("192.168.1.4")
+d = u2.connect()
 print(d.info)
 verifyContent = '您好，低价飞天茅台质量99.9%,对标正品，降低招待成本，提升饭桌规格！'
 done_path = u"./doneId.txt"
