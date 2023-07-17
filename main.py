@@ -51,8 +51,8 @@ def addFriends(wechatid):
     # 点击发送
     d(resourceId="com.tencent.mm:id/e9q").click()
     # 点击返回到添加好友页面
-    d(resourceId="com.tencent.mm:id/g0").click()
-    d(resourceId="com.tencent.mm:id/g0").click()
+    d.xpath('//*[@resource-id="com.tencent.mm:id/g1"]').click()
+    d.xpath('//*[@resource-id="com.tencent.mm:id/g1"]').click()
 
 
 def filterepeat():
