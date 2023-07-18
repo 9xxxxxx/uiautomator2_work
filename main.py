@@ -1,8 +1,26 @@
 # coding: utf-8
 import time
+
 import uiautomator2 as u2
 
 d = u2.connect()
+
+
+# 读取wechatid 60一组
+def getwechatid(number):
+    idlist = readWechatID(r'ChatId.txt')
+    count = 0
+    worklist = []
+    for _ in range(number):
+        worklist = idlist.pop(count)
+    with open('ChatId.txt', 'rw=', encoding='utf-8') as file:
+        file.truncate(0)
+        for i in idlist:
+            file.write(i + '\n')
+    with open('freshId.txt', 'w+', encoding='utf-8') as file:
+        file.truncate(0)
+        for i in worklist:
+            file.write(i + '\n')
 
 
 def readWechatID(filePath):
@@ -91,7 +109,7 @@ if __name__ == '__main__':
     # 设置申请内容
     verifyContent = '您好，低价飞天茅台质量99.9%,对标正品，降低招待成本，提升饭桌规格！'
     # 设置文件路径
-    done_path = u"./doneId.txt"
     file_path = u'./freshId.txt'
     # 主程序
+    getwechatid(60)
     main()
