@@ -3,10 +3,6 @@ import time
 import uiautomator2 as u2
 
 d = u2.connect()
-print(d.info)
-verifyContent = '您好，低价飞天茅台质量99.9%,对标正品，降低招待成本，提升饭桌规格！'
-done_path = u"./doneId.txt"
-file_path = u'./freshId.txt'
 
 
 def readWechatID(filePath):
@@ -20,18 +16,21 @@ def readWechatID(filePath):
             lines.append(line)
     return lines
 
+
 def checkuserstatus(wechatid):
     if d.xpath('//*[@resource-id="com.tencent.mm:id/j5_"]/android.widget.ImageView[1]').exists:
         print(wechatid, "该用户不存在")
         d(resourceId="com.tencent.mm:id/apy").click()
         return
+
+
 def addFriends(wechatid):
-    doneidlist = readWechatID(done_path)
-    if wechatid in doneidlist:
-        print(f'this id ({wechatid}) already added')
-        return
+    # doneidlist = readWechatID(done_path)
+    # if wechatid in doneidlist:
+    #     print(f'this id ({wechatid}) already added')
+    #     return
     # 点击账号输入框激活输入，聚焦输入光标
-    d(resourceId="com.tencent.mm:id/jcd").click()
+    d(resourceId="com.tencent.mm:id/eg6").click()
     time.sleep(1)
     # 输入要添加的号码
     d.xpath('//*[@resource-id="com.tencent.mm:id/eg6"]').set_text(wechatid)
@@ -39,9 +38,9 @@ def addFriends(wechatid):
     d.xpath('//*[@resource-id="com.tencent.mm:id/j6x"]/android.widget.RelativeLayout[1]').click()
     # 判断用户状态
     # 等待虚拟页面加载完毕
-    time.sleep(6)
+    time.sleep(3)
     if not d(text='添加到通讯录').exists:
-        print("该用户bu存在")
+        print(wechatid + '  ' + "该用户不存在")
         return
     # #点击接下来要进行的操作按钮 这里是点击添加到通讯录
     d(resourceId="com.tencent.mm:id/khj").click()
@@ -50,9 +49,10 @@ def addFriends(wechatid):
     time.sleep(2)
     # 点击发送
     d(resourceId="com.tencent.mm:id/e9q").click()
+    time.sleep(3)
     # 点击返回到添加好友页面
     d.xpath('//*[@resource-id="com.tencent.mm:id/g1"]').click()
-    d.xpath('//*[@resource-id="com.tencent.mm:id/g1"]').click()
+    time.sleep(1)
 
 
 def filterepeat():
@@ -65,23 +65,33 @@ def filterepeat():
 
 def main():
     # 点击右上角+号
-    d(resourceId="com.tencent.mm:id/grs").click()
+    d(resourceId="com.tencent.mm:id/hy6").click()
     time.sleep(1)
     #  点击添加好友
-    d(resourceId="com.tencent.mm:id/knx", text="添加朋友").click()
+    d.xpath('//android.widget.ListView/android.widget.LinearLayout[2]').click()
+    time.sleep(1)
+    # 聚焦输入框
+    d(resourceId="com.tencent.mm:id/j69").click()
     time.sleep(1)
     phonelist = readWechatID(file_path)
-    count = 1
-    with open('./doneId.txt', 'a+', encoding='utf-8') as done_file:
+    try:
         for i in phonelist:
-            trash = phonelist[count]
-            done_file.write(trash + "\n")
             addFriends(i)
-            if count >= 20:
-                break
-            count += 1
-            time.sleep(10)
+            phonelist.pop(phonelist.index(i))
+    finally:
+        with open('./freshId.txt', 'w', encoding='utf-8') as done_file:
+            done_file.truncate(0)
+            for i in phonelist:
+                done_file.write(i + '\n')
 
 
 if __name__ == '__main__':
+    # 输出设备信息
+    print(d.info)
+    # 设置申请内容
+    verifyContent = '您好，低价飞天茅台质量99.9%,对标正品，降低招待成本，提升饭桌规格！'
+    # 设置文件路径
+    done_path = u"./doneId.txt"
+    file_path = u'./freshId.txt'
+    # 主程序
     main()
