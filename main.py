@@ -11,9 +11,11 @@ def getwechatid(number):
     idlist = readwechatid(r'ChatId.txt')
     count = 0
     worklist = []
-    for _ in range(number):
-        worklist = idlist.pop(count)
-    with open('ChatId.txt', 'rw=', encoding='utf-8') as file:
+    for i in range(60):
+        idnumber = idlist.pop(count)
+        worklist.append(idnumber)
+        count += 1
+    with open('ChatId.txt', 'w+', encoding='utf-8') as file:
         file.truncate(0)
         for i in idlist:
             file.write(i + '\n')
@@ -42,7 +44,7 @@ def checkuserstatus(wechatid):
         return
 
 
-def addfriends(wechatid):
+def addfriends(wechatid,number):
     # doneidlist = readwechatid(done_path)
     # if wechatid in doneidlist:
     #     print(f'this id ({wechatid}) already added')
@@ -71,7 +73,7 @@ def addfriends(wechatid):
     # 点击返回到添加好友页面
     d.xpath('//*[@resource-id="com.tencent.mm:id/g1"]').click()
     time.sleep(1)
-    print(wechatid + 'is add successfully!')
+    print(wechatid + f' is add successfully! this is no.{number}')
 
 
 def filterepeat():
@@ -96,7 +98,7 @@ def main():
     count = 0
     try:
         for i in phonelist:
-            addfriends(i)
+            addfriends(i, count+1)
             phonelist.pop(count)
             count += 1
     except [IndexError]:
@@ -106,6 +108,7 @@ def main():
             done_file.truncate(0)
             for i in phonelist:
                 done_file.write(i + '\n')
+            print(f'this time add totally {count}')
             print('file modify successfully!')
 
 
@@ -117,5 +120,5 @@ if __name__ == '__main__':
     # 设置文件路径
     file_path = u'./freshId.txt'
     # 主程序
-    getwechatid(60)
+    # getwechatid(60)
     main()
