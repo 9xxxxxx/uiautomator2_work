@@ -7,8 +7,8 @@ d = u2.connect()
 
 
 # 读取wechatid 60一组
-def getwechatid(number,filepath):
-    if not os.path.getsize(filepath):
+def getwechatid(number, filepath):
+    if os.path.getsize(filepath):
         return
     idlist = readwechatid(r'ChatId.txt')
     count = 0
@@ -125,7 +125,7 @@ if __name__ == '__main__':
     # 设置申请内容
     verifyContent = '您好，低价飞天茅台质量99.9%,对标正品，降低招待成本，提升饭桌规格！'
     # 主程序
-    getwechatid(30)
     file_path = './freshId.txt'
+    getwechatid(30, file_path)
     phonelist = readwechatid(file_path)
     main(phonelist)
