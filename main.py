@@ -27,7 +27,7 @@ def getwechatid(number):
 
 def readwechatid(filepath):
     lines = []
-    with open(filepath, 'r') as file_to_read:
+    with open(filepath, 'r', encoding='utf-8') as file_to_read:
         while True:
             line = file_to_read.readline()
             if not line:
@@ -44,7 +44,7 @@ def checkuserstatus(wechatid):
         return
 
 
-def addfriends(wechatid,number):
+def addfriends(wechatid,number,notfind):
     # doneidlist = readwechatid(done_path)
     # if wechatid in doneidlist:
     #     print(f'this id ({wechatid}) already added')
@@ -59,8 +59,12 @@ def addfriends(wechatid,number):
     # 判断用户状态
     # 等待虚拟页面加载完毕
     time.sleep(3)
+    if d(text='发消息').exists:
+        print(wechatid + ' is already your friend!')
+        return
     if not d(text='添加到通讯录').exists:
-        print(wechatid + '  ' + "该用户不存在!")
+        print(wechatid + f"  该用户不存在! notfind:No.{notfind}")
+        notfind += 1
         return
     # #点击接下来要进行的操作按钮 这里是点击添加到通讯录
     d(resourceId="com.tencent.mm:id/khj").click()
@@ -73,7 +77,7 @@ def addfriends(wechatid,number):
     # 点击返回到添加好友页面
     d.xpath('//*[@resource-id="com.tencent.mm:id/g1"]').click()
     time.sleep(1)
-    print(wechatid + f' is add successfully! this is no.{number}')
+    print(wechatid + f' is add successfully! addSuccessful:No.{number}')
 
 
 def filterepeat():
@@ -84,7 +88,7 @@ def filterepeat():
             file.write(i + '\n')
 
 
-def main():
+def main(phone_list):
     # 点击右上角+号
     d(resourceId="com.tencent.mm:id/hy6").click()
     time.sleep(1)
@@ -94,21 +98,22 @@ def main():
     # 聚焦输入框
     d(resourceId="com.tencent.mm:id/j69").click()
     time.sleep(1)
-    phonelist = readwechatid(file_path)
     count = 0
+    notfind = 1
     try:
-        for i in phonelist:
-            addfriends(i, count+1)
-            phonelist.pop(count)
+        for i in phone_list:
+            addfriends(i, count+1, notfind)
+            phone_list.pop(count)
             count += 1
     except [IndexError]:
         print('something wrong,maybe its the list index error!')
     finally:
         with open('./freshId.txt', 'w', encoding='utf-8') as done_file:
             done_file.truncate(0)
-            for i in phonelist:
+            for i in phone_list:
                 done_file.write(i + '\n')
-            print(f'this time add totally {count}')
+            print('this time ')
+            print(f'this time add successfully {count}')
             print('file modify successfully!')
 
 
@@ -117,8 +122,8 @@ if __name__ == '__main__':
     print(d.info)
     # 设置申请内容
     verifyContent = '您好，低价飞天茅台质量99.9%,对标正品，降低招待成本，提升饭桌规格！'
-    # 设置文件路径
-    file_path = u'./freshId.txt'
     # 主程序
-    # getwechatid(60)
-    main()
+    getwechatid(60)
+    file_path = './freshId.txt'
+    phonelist = readwechatid(file_path)
+    main(phonelist)
