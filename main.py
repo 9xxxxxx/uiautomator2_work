@@ -46,7 +46,7 @@ def checkuserstatus(wechatid):
         return
 
 
-def addfriends(wechatid,number,notfind):
+def addfriends(wechatid, number, notfind):
     # doneidlist = readwechatid(done_path)
     # if wechatid in doneidlist:
     #     print(f'this id ({wechatid}) already added')
@@ -63,10 +63,10 @@ def addfriends(wechatid,number,notfind):
     time.sleep(3)
     if d(text='发消息').exists:
         print(wechatid + ' is already your friend!')
+        d.xpath('//*[@resource-id="com.tencent.mm:id/g1"]').click()
         return
     if not d(text='添加到通讯录').exists:
         print(wechatid + f"  该用户不存在! notfind:No.{notfind}")
-        notfind += 1
         return
     # #点击接下来要进行的操作按钮 这里是点击添加到通讯录
     d(resourceId="com.tencent.mm:id/khj").click()
@@ -80,6 +80,7 @@ def addfriends(wechatid,number,notfind):
     d.xpath('//*[@resource-id="com.tencent.mm:id/g1"]').click()
     time.sleep(1)
     print(wechatid + f' is add successfully! addSuccessful:No.{number}')
+    return 1
 
 
 def filterepeat():
@@ -102,13 +103,14 @@ def main(phone_list):
     time.sleep(1)
     count = 0
     notfind = 1
+    success = 1
     try:
-        for i in phone_list:
-            addfriends(i, count+1, notfind)
+        for wechatid in phone_list:
+            if addfriends(wechatid, success+1, notfind):
+                success += 1
             phone_list.pop(count)
             count += 1
-    except [IndexError]:
-        print('something wrong,maybe its the list index error!')
+            notfind += 1
     finally:
         with open('./freshId.txt', 'w', encoding='utf-8') as done_file:
             done_file.truncate(0)

@@ -9,6 +9,7 @@ def readWechatID(filePath):
             lines.append(line)
     return lines
 
+
 result = readWechatID(r"./doneId.txt")
 count = 0
 # try:
@@ -22,5 +23,8 @@ count = 0
 #         file.truncate(0)
 #         for i in result:
 #             file.write(i + '\n')
-for i in range(60):
-    print(i)
+def test():
+    return
+
+if test():
+    print("good")
