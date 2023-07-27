@@ -13,7 +13,7 @@ def getwechatid(number, filepath):
     idlist = readwechatid(r'ChatId.txt')
     count = 0
     worklist = []
-    for i in range(60):
+    for i in range(number):
         idnumber = idlist.pop(count)
         worklist.append(idnumber)
         count += 1
@@ -36,7 +36,7 @@ def readwechatid(filepath):
                 break
             line = line.strip('\n')
             lines.append(line)
-    return lines
+    return list(set(lines))
 
 
 def checkuserstatus(wechatid):
@@ -46,7 +46,7 @@ def checkuserstatus(wechatid):
         return
 
 
-def addfriends(wechatid, number, notfind):
+def addfriends(wechatid, success, notfind):
     # doneidlist = readwechatid(done_path)
     # if wechatid in doneidlist:
     #     print(f'this id ({wechatid}) already added')
@@ -79,7 +79,7 @@ def addfriends(wechatid, number, notfind):
     # 点击返回到添加好友页面
     d.xpath('//*[@resource-id="com.tencent.mm:id/g1"]').click()
     time.sleep(1)
-    print(wechatid + f' is add successfully! addSuccessful:No.{number}')
+    print(wechatid + f' is add successfully! addSuccessful:No.{success}')
     return 1
 
 
@@ -106,24 +106,26 @@ def main(phone_list):
     success = 1
     try:
         for wechatid in phone_list:
-            if addfriends(wechatid, success+1, notfind):
+            if addfriends(wechatid, success, notfind):
                 success += 1
+            else:
+                notfind += 1
             phone_list.pop(count)
             count += 1
-            notfind += 1
     finally:
         with open('./freshId.txt', 'w', encoding='utf-8') as done_file:
             done_file.truncate(0)
             for i in phone_list:
                 done_file.write(i + '\n')
-            print('this time ')
-            print(f'this time add successfully {count}')
+            print(f'this time add totally {count}')
+            print(f'this time add successfully {success}')
             print('file modify successfully!')
 
 
 if __name__ == '__main__':
     # 输出设备信息
-    print(d.info)
+    for k, value in d.info.items():
+        print(f"{k}: {value}")
     # 设置申请内容
     verifyContent = '您好，低价飞天茅台质量99.9%,对标正品，降低招待成本，提升饭桌规格！'
     # 主程序
