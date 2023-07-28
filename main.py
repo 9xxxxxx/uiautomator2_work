@@ -36,7 +36,7 @@ def readwechatid(filepath):
                 break
             line = line.strip('\n')
             lines.append(line)
-    return list(set(lines))
+    return lines
 
 
 def checkuserstatus(wechatid):
@@ -91,7 +91,9 @@ def filterepeat():
             file.write(i + '\n')
 
 
-def main(phone_list):
+def main():
+    phonelist = readwechatid(file_path)
+    phonelist = list(set(phonelist))
     # 点击右上角+号
     d(resourceId="com.tencent.mm:id/hy6").click()
     time.sleep(1)
@@ -105,17 +107,17 @@ def main(phone_list):
     notfind = 1
     success = 1
     try:
-        for wechatid in phone_list:
+        for wechatid in phonelist:
             if addfriends(wechatid, success, notfind):
                 success += 1
             else:
                 notfind += 1
-            phone_list.pop(count)
+            phonelist.pop(count)
             count += 1
     finally:
         with open('./freshId.txt', 'w', encoding='utf-8') as done_file:
             done_file.truncate(0)
-            for i in phone_list:
+            for i in phonelist:
                 done_file.write(i + '\n')
             print(f'this time add totally {count}')
             print(f'this time add successfully {success}')
@@ -131,5 +133,4 @@ if __name__ == '__main__':
     # 主程序
     file_path = './freshId.txt'
     getwechatid(30, file_path)
-    phonelist = readwechatid(file_path)
-    main(phonelist)
+    main()
