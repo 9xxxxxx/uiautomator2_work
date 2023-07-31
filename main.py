@@ -119,6 +119,8 @@ def main():
             done_file.truncate(0)
             for i in phonelist:
                 done_file.write(i + '\n')
+            d(resourceId="com.tencent.mm:id/apy").click()
+            d(resourceId="com.tencent.mm:id/g1").click()
             print(f'this time add totally {count}')
             print(f'this time add successfully {success}')
             print('file modify successfully!')

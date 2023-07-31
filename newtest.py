@@ -1,17 +1,5 @@
-def readWechatID(filePath):
-    lines = []
-    with open(filePath, 'r') as file_to_read:
-        while True:
-            line = file_to_read.readline()
-            if not line:
-                break
-            line = line.strip('\n')
-            lines.append(line)
-    return lines
+from main import *
 
-
-result = readWechatID(r"./doneId.txt")
-count = 0
 # try:
 #     for i in result:
 #         result.pop(result.index(i))
@@ -23,8 +11,44 @@ count = 0
 #         file.truncate(0)
 #         for i in result:
 #             file.write(i + '\n')
-def test():
-    return
 
-if test():
-    print("good")
+
+file_path = 'ChatId.txt'
+
+
+def phonenumberchange():
+    line = readwechatid(file_path)
+    newline = line[:10]
+    newline = list(newline)
+    # int_str = [int(x) for x in newline]
+    print(newline)
+    workdone = []
+    for i in newline:
+        l = list(i)
+        if l[-4] == '8':
+            l[-4] = '9'
+        elif l[-4] == '7':
+            l[-4] = '8'
+        elif l[-4] == '6':
+            l[-4] = '7'
+        elif l[-4] == '5':
+            l[-4] = '6'
+        elif l[-4] == '4':
+            l[-4] = '5'
+        elif l[-4] == '3':
+            l[-4] = '4'
+        elif l[-4] == '2':
+            l[-4] = '3'
+        elif l[-4] == '1':
+            l[-4] = '2'
+        elif l[-4] == '0':
+            l[-4] = '1'
+        i = ''.join(l)
+        workdone.append(i)
+        print(newline)
+    with open('newid.txt', 'w', encoding='utf-8') as file:
+        for i in workdone:
+            file.write(i + '\n')
+
+
+phonenumberchange()
