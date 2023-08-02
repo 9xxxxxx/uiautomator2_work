@@ -10,14 +10,12 @@ d = u2.connect()
 def getwechatid(number, filepath):
     if os.path.getsize(filepath):
         return
-    idlist = readwechatid(r'ChatId.txt')
-    count = 0
+    idlist = readwechatid(r'newid.txt')
     worklist = []
     for i in range(number):
-        idnumber = idlist.pop(count)
+        idnumber = idlist.pop()
         worklist.append(idnumber)
-        count += 1
-    with open('ChatId.txt', 'w+', encoding='utf-8') as file:
+    with open('newid.txt', 'w+', encoding='utf-8') as file:
         file.truncate(0)
         for i in idlist:
             file.write(i + '\n')
@@ -46,7 +44,7 @@ def checkuserstatus(wechatid):
         return
 
 
-def addfriends(wechatid, success, notfind):
+def addfriends(wechatid, success, found):
     # doneidlist = readwechatid(done_path)
     # if wechatid in doneidlist:
     #     print(f'this id ({wechatid}) already added')
@@ -66,7 +64,7 @@ def addfriends(wechatid, success, notfind):
         d.xpath('//*[@resource-id="com.tencent.mm:id/g1"]').click()
         return
     if not d(text='添加到通讯录').exists:
-        print(wechatid + f"  该用户不存在! notfind:No.{notfind}")
+        print(wechatid + f"  该用户不存在! found:No.{found}")
         return
     # #点击接下来要进行的操作按钮 这里是点击添加到通讯录
     d(resourceId="com.tencent.mm:id/khj").click()
@@ -104,14 +102,14 @@ def main():
     d(resourceId="com.tencent.mm:id/j69").click()
     time.sleep(1)
     count = 0
-    notfind = 1
+    notfound = 1
     success = 1
     try:
         for wechatid in phonelist:
-            if addfriends(wechatid, success, notfind):
+            if addfriends(wechatid, success, notfound):
                 success += 1
             else:
-                notfind += 1
+                notfound += 1
             phonelist.pop(count)
             count += 1
     finally:
