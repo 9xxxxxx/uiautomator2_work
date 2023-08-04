@@ -3,7 +3,7 @@ import time
 
 import uiautomator2 as u2
 import os
-d = u2.connect()
+d = u2.connect('192.168.1.5')
 
 
 # 读取wechatid 60一组
